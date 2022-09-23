@@ -1,0 +1,11 @@
+.idea/
+__pycache__
+*$py.class
+*.egg*
+.coverage
+/build
+/dist
+*.db
+.DS_Store
+$$__*
+_~*
