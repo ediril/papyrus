@@ -28,7 +28,6 @@ def main():
 
     parser_build = subparsers.add_parser('build')
     parser_build.add_argument('--target', default='dev', choices=['dev', 'prod'])
-    parser_build.add_argument('--drafts', action='store_true')
     parser_build.set_defaults(func=build)
 
     parser_serve = subparsers.add_parser('serve')

@@ -15,9 +15,6 @@ class Site():
     def __init__(self, args, conf):
         self.config = conf
         self.post_inputs = sorted(pathlib.Path(self.config['DIR_POSTS']).glob('**/*.md'), key=lambda p: str(p.name))
-        if args.drafts:
-            drafts = list(pathlib.Path(self.config['DIR_DRAFTS']).glob('**/*.md'))
-            self.post_inputs = sorted(drafts + self.post_inputs, key=lambda p: str(p.name))
         self.page_inputs = pathlib.Path(self.config['DIR_PAGES']).glob('**/*.md')
         self.posts = []
         self.pages = []
@@ -52,14 +49,11 @@ class Site():
 
     def read_posts(self):
         for post_input in self.post_inputs:
-            draft = False
-            if str(post_input).startswith(self.config['DIR_DRAFTS']):
-                draft = True
             if post_input.name in self.post_store:
                 post = self.post_store[post_input.name]
                 print("Reading from post store: ", post)
             else:
-                post = Post(post_input, draft)
+                post = Post(post_input)
             if not post.is_current():
                 post.build(self.pandoc, self.config)
                 print("Building post: ", post)
