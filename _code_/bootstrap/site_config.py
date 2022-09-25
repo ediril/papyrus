@@ -4,7 +4,6 @@
 DIR_PUBLISH   = "_pub"
 DIR_POSTS     = "posts"
 DIR_PAGES     = "pages"
-DIR_DRAFTS    = "drafts"
 DIR_STATIC    = "static"
 DIR_TEMPLATES = "templates"
 POST_STORE    = "post_store.db"

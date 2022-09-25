@@ -1,8 +1,8 @@
 import pathlib
-import importlib
 
-DEFAULT_CONFIG_FILE = "stasis_config.py"
+DEFAULT_CONFIG_FILE = "site_config.py"
 BOOTSTRAP_PATH = "bootstrap"
+
 
 def read_config():
     config_path = pathlib.Path(DEFAULT_CONFIG_FILE)
