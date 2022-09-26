@@ -56,7 +56,8 @@ class Site():
             if not post.is_current():
                 post.build(self.pandoc, self.config)
                 print("Building post: ", post)
-            self.posts.append(post)
+            if post.is_public():
+                self.posts.append(post)
         self.store_posts()
         self.config['SITE']['posts'] = self.posts
         print("Read {} posts.".format(str(len(self.posts))))

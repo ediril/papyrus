@@ -44,6 +44,18 @@ class BasePage():
         meta.content = meta.content[ii_first_newline:].strip()
         return first_line.replace("#", "").strip()
 
+    def is_public(self):
+        if not self.props:
+            return True
+
+        if "public" in self.props:
+            return True
+
+        if all(p not in self.props for p in ["private", "draft"]):
+            return True
+
+        return False
+
     def get_date(self, meta, input_path):
         pagedate = None
         try:
