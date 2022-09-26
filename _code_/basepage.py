@@ -61,7 +61,10 @@ class BasePage():
 
     def get_url(self, meta):
         if 'path' in meta:
-            return meta['path']
+            if meta['path'] == '/':
+                return "index.html"
+            else:
+                return meta['path']
         else:
             return self.input_path.with_suffix('').name
 
