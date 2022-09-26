@@ -5,7 +5,6 @@
   <h1 class="post-title">{{ post.title }}</h1>
   <p class="post-meta">
     <span class="post-date">{{ post.date.strftime("%d %b %Y") }}</span>
-    • <a class="post-author" href="{{ site.base_url }}{{ site.author[1] }}">{{ site.author[0] }}</a>
     {% if post.topics %} •
       {% for topic in post.topics %}
           {%- if loop.last -%}
@@ -22,20 +21,5 @@
 <div class="post-content">
 {{ content | safe }}
 </div>
-
-<nav>
-  <ul>
-    <li>
-      {% if post.prev_post %}
-        <a href="{{ site.base_url }}{{ post.prev_post.url }}">← {{ post.prev_post.title }}</a>
-      {% endif %}
-    </li>
-    <li>
-      {% if post.next_post %}
-        <a href="{{ site.base_url }}{{ post.next_post.url }}">{{ post.next_post.title }} →</a>
-      {% endif %}
-    </li>
-  </ul>
-</nav>
 
 {% endblock %}
