@@ -15,7 +15,13 @@ def serve(args, config):
 
     rootdir = config['DIR_PUBLISH']
     port = config['SERVER_PORT']
-    httpd = socketserver.TCPServer(("localhost", port), handler_from(rootdir))
+
+    handler = handler_from(rootdir)
+    handler.extensions_map = {
+        '': 'text/html',
+    }
+
+    httpd = socketserver.TCPServer(("localhost", port), handler)
     print("Starting server at: http://localhost:{}/".format(port))
     try:
         httpd.serve_forever()
