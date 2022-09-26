@@ -9,6 +9,7 @@ class BasePage():
         self.output_path = None
         self.layout = None
         self.url = None
+        self.props = None
         self.title = ""
         self.date = None
         self.wordcount = 0
@@ -22,16 +23,26 @@ class BasePage():
         with self.input_path.open() as infile:
             self.content_text = infile.read()
         meta = frontmatter.loads(self.content_text)
-        self.layout = meta['layout']
-        self.title = meta['title']
+        self.title = self.extract_title(meta)
+        self.excerpt_text, self.content_text = \
+            self.get_excerpt_content(meta.content, config['EXCERPT_SEPARATOR'])
+        self.layout = meta['layout'] if 'layout' in meta else 'post'
         self.date = self.get_date(meta, self.input_path)
-        self.url = self.get_url(meta, config['FN_POST_URL'])
+        self.url = self.get_url(meta)
+        self.props = meta['props'].split(" ") if "props" in meta else []
+        self.topics = ('topics' in meta and meta['topics'].split(" ")) or []
         self.output_path = self.get_output_path(config['DIR_PUBLISH'])
-        self.make_excerpt(config['EXCERPT_SEPARATOR'])
+
         if not self.is_current():
             self.generate_html(pandoc)
         self.wordcount = pandoc.countwords(self.input_path)
-        self.topics = ('topics' in meta and meta['topics'].split(" ")) or []
+
+    @staticmethod
+    def extract_title(meta):
+        ii_first_newline = meta.content.find("\n")
+        first_line = meta.content[0:ii_first_newline]
+        meta.content = meta.content[ii_first_newline:].strip()
+        return first_line.replace("#", "").strip()
 
     def get_date(self, meta, input_path):
         pagedate = None
@@ -48,8 +59,11 @@ class BasePage():
             pagedate = datetime.date.today()
         return pagedate
 
-    def get_url(self, meta, urlfn):
-        return meta['path']
+    def get_url(self, meta):
+        if 'path' in meta:
+            return meta['path']
+        else:
+            return self.input_path.with_suffix('').name
 
     def get_output_path(self, site_path):
         path = self.url
@@ -59,11 +73,14 @@ class BasePage():
             path += "index.html"
         return site_path / pathlib.Path(path)
 
-    def make_excerpt(self, excerpt_sep):
-        splittext = self.content_text.split(excerpt_sep, maxsplit=1)
-        if len(splittext) == 2:
-            self.excerpt_text = splittext[0]
-            self.content_text = splittext[1]
+    @staticmethod
+    def get_excerpt_content(full_text, excerpt_sep):
+        splittext = full_text.split(excerpt_sep, maxsplit=1)
+
+        if len(splittext) < 2:
+            return "", splittext[0].strip()
+
+        return splittext[0].strip(), splittext[0] + splittext[1].strip()
 
     def generate_html(self, pandoc):
         self.content_html = pandoc.markup(input=self.content_text)

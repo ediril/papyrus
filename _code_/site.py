@@ -35,13 +35,12 @@ class Site():
     def build(self):
         self.copystaticfiles()
         self.read_posts()
-        self.build_topics()
+        # self.build_topics()
         self.write_posts()
-        self.write_index_pages()
-        self.write_topic_pages()
+        # self.write_topic_pages()
         self.read_pages()
         self.write_pages()
-        self.write_rss_feed()
+        # self.write_rss_feed()
         self.post_store.close()
 
     def copystaticfiles(self):
@@ -58,7 +57,6 @@ class Site():
                 post.build(self.pandoc, self.config)
                 print("Building post: ", post)
             self.posts.append(post)
-        self.post_paginate()
         self.store_posts()
         self.config['SITE']['posts'] = self.posts
         print("Read {} posts.".format(str(len(self.posts))))
@@ -69,21 +67,6 @@ class Site():
             page.build(self.pandoc, self.config)
             self.pages.append(page)
         print("Read {} static pages.".format(str(len(self.pages))))
-
-    def post_paginate(self):
-        for i, post in enumerate(self.posts):
-            if i > 0:
-                prev_post = self.posts[i-1]
-                post.prev_post = {
-                    'url': prev_post.url,
-                    'title': prev_post.title
-                }
-            if i < len(self.posts) - 1:
-                next_post = self.posts[i+1]
-                post.next_post = {
-                    'url': next_post.url,
-                    'title': next_post.title
-                }
 
     def store_posts(self):
         for post in self.posts:
@@ -102,46 +85,6 @@ class Site():
         for post in self.posts:
             post.write(self.jinja_env, self.config['SITE'])
 
-    def write_index_pages(self):
-        print("Writing index pages...")
-        template = self.jinja_env.get_template("index.html")
-        post_queue = self.posts.copy()
-        post_queue.reverse()
-        paginator = {
-            'page': 1,
-            'n_pages': 1 + int(len(post_queue) / self.config['POSTS_PER_PAGE']),
-            'prev_url': None,
-            'next_url': None
-        }
-        while len(post_queue) > 0:
-            posts = post_queue[:self.config['POSTS_PER_PAGE']]
-            page = {}
-            if paginator['page'] == 1:
-                index_path = self.site_path / "index.html"
-                page['url'] = "/"
-            else:
-                index_path = self.site_path / "page{}".format(str(paginator['page'])) / "index.html"
-                page['url'] = "/page{}/".format(paginator['page'])
-
-            if paginator['page'] + 1 <= paginator['n_pages']:
-                paginator['next_url'] = "/page{}/".format(str(paginator['page'] + 1))
-            else:
-                paginator['next_url'] = None
-
-            if paginator['page'] == 2:
-                paginator['prev_url'] = "/"
-            elif paginator['page'] > 2:
-                paginator['prev_url'] = "/page{}/".format(str(paginator['page'] - 1))
-            else:
-                paginator['prev_url'] = None
-
-            template_out = template.render(posts=posts, site=self.config['SITE'], page=page, paginator=paginator)
-            index_path.parent.mkdir(parents=True, exist_ok=True)
-            index_path.write_text(template_out)
-            post_queue = post_queue[self.config['POSTS_PER_PAGE']:]
-            paginator['page'] += 1
-
-
     def write_topic_pages(self):
         print("Writing topic pages...")
         template = self.jinja_env.get_template("topic.html")
@@ -151,10 +94,10 @@ class Site():
             posts.reverse()
             page = {
                 'title': topic.title(),
-                'url': "/{}/{}/".format(self.config['TOPICS_URL_PREFACE'], topic)
+                'url': f"/topics/{topic}/"
             }
             template_out = template.render(topic=topic, posts=posts, site=self.config['SITE'], page=page)
-            topic_path = self.site_path / self.config['TOPICS_URL_PREFACE'] / topic / "index.html"
+            topic_path = self.site_path / "topics" / topic
             topic_path.parent.mkdir(parents=True, exist_ok=True)
             topic_path.write_text(template_out)
 
