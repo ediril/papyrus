@@ -1,10 +1,9 @@
 import pathlib
 import shelve
-import datetime
-import time
-from email import utils
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from distutils.dir_util import copy_tree
+from operator import attrgetter
 
 from .post import Post
 from .page import Page
@@ -59,6 +58,7 @@ class Site():
             if post.is_public():
                 self.posts.append(post)
         self.store_posts()
+        self.posts = sorted(self.posts, key=attrgetter('date'), reverse=True)
         self.config['SITE']['posts'] = self.posts
         print("Read {} posts.".format(str(len(self.posts))))
 
