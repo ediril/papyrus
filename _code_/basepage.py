@@ -88,7 +88,8 @@ class BasePage():
             except:
                 pass
         if pagedate is None:
-            pagedate = datetime.date.today()
+            created_ts = int(os.stat(input_path.as_posix()).st_birthtime)
+            pagedate = datetime.date.fromtimestamp(created_ts)
         return pagedate
 
     def get_url(self, meta):
