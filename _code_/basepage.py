@@ -1,5 +1,7 @@
 import pathlib
 import datetime
+import os
+import re
 
 import frontmatter
 
@@ -22,10 +24,14 @@ class BasePage():
     def build(self, pandoc, config):
         with self.input_path.open() as infile:
             self.content_text = infile.read()
-        meta = frontmatter.loads(self.content_text)
-        self.title = self.extract_title(meta)
+        # parse and remove front matter
+        front_meta, content = frontmatter.parse(self.content_text)
+        # parse and remove back matter
+        back_meta, content = self.parse_back_matter(content)
+        meta = front_meta | back_meta
+        self.title, content = self.extract_title(content)
         self.excerpt_text, self.content_text = \
-            self.get_excerpt_content(meta.content, config['EXCERPT_SEPARATOR'])
+            self.get_excerpt_content(content, config['EXCERPT_SEPARATOR'])
         self.layout = meta['layout'] if 'layout' in meta else 'post'
         self.date = self.get_date(meta, self.input_path)
         self.url = self.get_url(meta)
@@ -38,11 +44,25 @@ class BasePage():
         self.wordcount = pandoc.countwords(self.input_path)
 
     @staticmethod
-    def extract_title(meta):
-        ii_first_newline = meta.content.find("\n")
-        first_line = meta.content[0:ii_first_newline]
-        meta.content = meta.content[ii_first_newline:].strip()
-        return first_line.replace("#", "").strip()
+    def parse_back_matter(content):
+        back_meta = {}
+        ii = []
+        for mo in re.finditer(r"^---\s*$", content, re.MULTILINE):
+            ii.append(mo.start())
+
+        if (len(ii)) == 2 and len(content) == ii[1] + 3:
+            back_matter = content[ii[0]:]
+            back_meta, _ = frontmatter.parse(back_matter)
+            content = content[:ii[0]].strip()
+
+        return back_meta, content
+
+    @staticmethod
+    def extract_title(content):
+        ii_first_newline = content.find("\n")
+        first_line = content[0:ii_first_newline]
+        content = content[ii_first_newline:].strip()
+        return first_line.replace("#", "").strip(), content
 
     def is_public(self):
         if not self.props:
