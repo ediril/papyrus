@@ -340,7 +340,7 @@ pre code {
 }
 
 
-#topic_list > ul > li > a {
+#tag_list > ul > li > a {
     text-transform: capitalize;
 }
 

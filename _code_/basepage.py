@@ -15,7 +15,7 @@ class BasePage():
         self.title = ""
         self.date = None
         self.wordcount = 0
-        self.topics = []
+        self.tags = []
         self.content_text = None
         self.content_html = None
         self.excerpt_text = None
@@ -36,7 +36,7 @@ class BasePage():
         self.date = self.get_date(meta, self.input_path)
         self.url = self.get_url(meta)
         self.props = meta['props'].split(" ") if "props" in meta else []
-        self.topics = ('topics' in meta and meta['topics'].split(" ")) or []
+        self.tags = ('tags' in meta and meta['tags'].split(" ")) or []
         self.output_path = self.get_output_path(config['DIR_PUBLISH'])
 
         if not self.is_current():

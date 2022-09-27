@@ -1,3 +1,9 @@
+v0.2
+- "date" and "topics" are also optional
+  - Get date from file creation if it is not specified
+- Add support for back matter
+- Rename topics as tags
+
 
 v0.1
 - Add the concept of "props"
