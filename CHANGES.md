@@ -4,7 +4,6 @@ v0.2
 - Add support for back matter
 - Rename topics as tags
 
-
 v0.1
 - Add the concept of "props"
   - Posts default to "private"
@@ -16,7 +15,6 @@ v0.1
 - Eliminate POSTS_PER_PAGE
 - Eliminate TOPICS_URL_PREFACE
 - Disable topics (for now)
-
 
 v0.0
 - Fork from Stasis version v0.1.3
