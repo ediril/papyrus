@@ -1,8 +1,8 @@
 import pathlib
 
-DEFAULT_CONFIG_FILE = "site_config.py"
+DEFAULT_CONFIG_FILE = "_site_config.py"
 BOOTSTRAP_PATH = "bootstrap"
-
+TEMPLATES_PATH = "templates"
 
 def read_config():
     config_path = pathlib.Path(DEFAULT_CONFIG_FILE)
