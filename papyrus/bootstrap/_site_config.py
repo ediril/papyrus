@@ -2,7 +2,6 @@
 
 ### local directory setup
 DIR_PUBLISH   = "_pub"
-DIR_CONTENT   = "content"
 DIR_FILES     = "files"
 DIR_TEMPLATES = "templates"
 POST_STORE    = "post_store.db"
@@ -15,6 +14,7 @@ SITE = {
     'absolute_url': "https://example.com",
     'base_url':     "",
     'template':     "default",
+    'static_folder': "static",
     'twitter':      "@example",
     'github':       "https://github.com/example",
     'recent_posts': 5,
