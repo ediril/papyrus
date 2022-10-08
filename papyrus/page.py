@@ -1,9 +1,8 @@
 from .basepage import BasePage
 
 class Page(BasePage):
-    def __init__(self, input_path, meta, content):
-        print("Creating Page from file:", input_path)
-        super().__init__(input_path, meta, content)
+    def __init__(self, input_path):
+        super().__init__(input_path)
 
     def __str__(self):
         return "Page at {}: {}".format(self.url, self.title)
@@ -11,11 +10,9 @@ class Page(BasePage):
     def build(self, pandoc, config):
         super().build(pandoc, config)
 
-        self.title = self.meta['title'] if 'title' in self.meta else ""
-
-        if not self.is_current():
-            if self.layout != 'jinja':
-                self.generate_html(pandoc)
+        print("Building page: ", self)
+        if self.layout != 'jinja':
+            self.generate_html(pandoc)
 
     def render(self, jinja_env, site_meta, page_meta):
         print("Writing page:", self)

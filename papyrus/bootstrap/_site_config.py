@@ -3,7 +3,6 @@
 ### local directory setup
 DIR_PUBLISH   = "_pub"
 DIR_FILES     = "files"
-DIR_TEMPLATES = "templates"
 POST_STORE    = "post_store.db"
 
 ### public-facing site metadata

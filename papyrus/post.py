@@ -2,8 +2,10 @@
 from .basepage import BasePage
 
 class Post(BasePage):
-    def __init__(self, input_path, meta, content):
-        super().__init__(input_path, meta, content)
+    def __init__(self, input_path):
+        super().__init__(input_path)
+
+        self.wordcount = 0
 
     def __str__(self):
         if self.date:
@@ -14,10 +16,13 @@ class Post(BasePage):
     def build(self, pandoc, config):
         super().build(pandoc, config)
 
-        self.tags = self.meta['tags'].split(" ") if ('tags' in self.meta and self.meta['tags']) else []
+        if not self.title:
+            self.title = self.input_path.replace(".md", "")
+
         self.wordcount = pandoc.countwords(self.input_path)
 
         if not self.is_current():
+            print("Building post: ", self)
             self.generate_html(pandoc)
 
     def render(self, jinja_env, site_meta, page_meta):

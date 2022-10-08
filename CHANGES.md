@@ -1,3 +1,7 @@
+v0.4
+- Don't copy templates folder to destination, use from within papyrus folder
+- Update properties both on init and build
+
 v0.3
 - Change default config filename to `_site_config.py`
 - Rename code folder to "papyrus"

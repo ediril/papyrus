@@ -12,7 +12,3 @@ def init(args, conf):
 
     bootstrap_path = pathlib.Path(__file__).parent / BOOTSTRAP_PATH
     copy_tree(bootstrap_path.resolve(), str(pathlib.Path('.').resolve()))
-
-    templates_path = pathlib.Path(__file__).parent / TEMPLATES_PATH
-    destination_path = pathlib.Path('..') / TEMPLATES_PATH
-    copy_tree(templates_path.resolve(), str(destination_path.resolve()))
