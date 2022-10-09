@@ -2,6 +2,7 @@
 
 ### local directory setup
 DIR_PUBLISH   = "_pub"
+DIR_PAGES     = "pages"
 DIR_FILES     = "files"
 POST_STORE    = "post_store.db"
 

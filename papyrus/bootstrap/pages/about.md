@@ -1,6 +1,5 @@
 ---
 layout: page
-path: /about/
 ---
 
 # About page

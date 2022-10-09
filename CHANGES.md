@@ -1,3 +1,7 @@
+v0.5
+- Look in "pages" folder for site pages
+- Default template changes
+
 v0.4
 - Don't copy templates folder to destination, use from within papyrus folder
 - Update properties both on init and build

@@ -17,7 +17,7 @@ class Post(BasePage):
         super().build(pandoc, config)
 
         if not self.title:
-            self.title = self.input_path.replace(".md", "")
+            self.title = self.input_path.name.replace(".md", "")
 
         self.wordcount = pandoc.countwords(self.input_path)
 
@@ -25,7 +25,15 @@ class Post(BasePage):
             print("Building post: ", self)
             self.generate_html(pandoc)
 
-    def render(self, jinja_env, site_meta, page_meta):
-        print("Writing post:", self)
+    def __render(self, jinja_env, site_meta, page_meta):
         template = jinja_env.get_template("{}.html".format(self.layout))
         return template.render(content=self.content_html, post=self, page=page_meta, site=site_meta)
+
+    def write(self, jinja_env, site_meta):
+        if not self.is_current():
+            print("Writing post:", self)
+            template_out = self.__render(jinja_env, site_meta, self.get_page_metadata())
+            self.output_path.parent.mkdir(parents=True, exist_ok=True)
+            self.output_path.write_text(template_out)
+            return True
+        return False

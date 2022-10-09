@@ -14,7 +14,8 @@ from .pandoc import Pandoc
 class Site():
     def __init__(self, args, conf):
         self.config = conf
-        self.content_files = sorted(pathlib.Path('.').glob('**/*.md'), key=lambda p: str(p.name))
+        self.page_files = pathlib.Path(self.config['DIR_PAGES']).glob('*.md')
+        self.post_files = sorted(pathlib.Path('.').glob('*.md'), key=lambda p: str(p.name))
         self.posts = []
         self.pages = []
         self.tags = {}
@@ -29,10 +30,11 @@ class Site():
     def build(self):
         self.copy_files()
         self.configure_jinja_env()
-        self.read_content()
-        # self.build_tags()
+        self.read_posts()
+        self.build_tags()
         self.write_posts()
         # self.write_tag_pages()
+        self.read_pages()
         self.write_pages()
         # self.write_rss_feed()
         self.post_store.close()
@@ -56,34 +58,36 @@ class Site():
             keep_trailing_newline=True
         )
 
-    def read_content(self):
-        for content_file in self.content_files:
-            if content_file.name.endswith(".page.md"):
-                page = Page(content_file)
-                if page.is_public():
-                    page.build(self.pandoc, self.config)
-                    self.pages.append(page)
-
+    def read_posts(self):
+        for post_file in self.post_files:
+            if post_file.name in self.post_store:
+                post = self.post_store[post_file.name]
+                print("Reading Post from store: ", post)
             else:
-                if content_file.name in self.post_store:
-                    post = self.post_store[content_file.name]
-                    print("Reading Post from store: ", post)
-                else:
-                    post = Post(content_file)
+                post = Post(post_file)
 
-                if post.is_draft():
-                    print("Skipping draft post: ", post)
+            if post.is_draft():
+                print("Skipping draft post: ", post)
+                continue
 
-                elif post.is_public():
-                    if not post.is_current():
-                        post.build(self.pandoc, self.config)
-                        self.post_store[post.input_path.name] = post
-                    self.posts.append(post)
+            if not post.is_current():
+                post.build(self.pandoc, self.config)
+                self.post_store[post.input_path.name] = post
+
+            if post.is_public():
+                self.posts.append(post)
 
         self.posts = sorted(self.posts, key=attrgetter('date'), reverse=True)
         self.config['SITE']['posts'] = self.posts
         print("Read {} public posts".format(str(len(self.posts))))
-        print("Read {} pages".format(str(len(self.pages))))
+
+    def read_pages(self):
+        for page_file in self.page_files:
+            page = Page(page_file)
+            if page.is_public():
+                page.build(self.pandoc, self.config)
+                self.pages.append(page)
+        print("Read {} public pages".format(str(len(self.pages))))
 
     def build_tags(self):
         for post in self.posts:
@@ -92,24 +96,28 @@ class Site():
                     self.tags[tag] = []
                 self.tags[tag].append(post)
         self.config['SITE']['tags'] = self.tags
+        print("Found {} tags".format(str(len(self.tags))))
 
     def write_posts(self):
-        post_cnt = 0
+        cnt = 0
         for post in self.posts:
-            if not post.is_current():
-                post.write(self.jinja_env, self.config['SITE'])
-                post_cnt += 1
+            if post.write(self.jinja_env, self.config['SITE']):
+                cnt += 1
 
-        if post_cnt == 0:
+        if cnt == 0:
             print("Public posts are up-to-date")
         else:
-            print(f"Wrote {post_cnt} public post{'s' if post_cnt != 1 else ''}")
+            print(f"Wrote {cnt} public post{'s' if cnt != 1 else ''}")
 
     def write_pages(self):
+        cnt = 0
         for page in self.pages:
-            page.write(self.jinja_env, self.config['SITE'])
-
-        print(f"Wrote {len(self.pages)} public page{'s' if len(self.pages) != 1 else ''}")
+            if page.write(self.jinja_env, self.config['SITE']):
+                cnt += 1
+        if cnt == 0:
+            print("Public posts are up-to-date")
+        else:
+            print(f"Wrote {cnt} public page{'s' if cnt != 1 else ''}")
 
     def write_tag_pages(self):
         print("Writing tag pages...")
