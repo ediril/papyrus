@@ -3,6 +3,7 @@
 ### local directory setup
 DIR_PUBLISH   = "_pub"
 DIR_PAGES     = "pages"
+DIR_POSTS     = "posts"     # can be a list of folders, e.g. ["notes1", "notes2"]
 DIR_FILES     = "files"
 POST_STORE    = "post_store.db"
 
@@ -11,13 +12,12 @@ SITE = {
     'title':        "Papyrus",
     'description':  "A simple static site generator",
     'site_name':    "example.com",
+    'author':       ("author", "/about/"),
     'absolute_url': "https://example.com",
     'base_url':     "",
-    'template':     "default",
+    'template':     "stasis",
     'static_folder': "static",
-    'twitter':      "@example",
-    'github':       "https://github.com/example",
-    'recent_posts': 5,
+    'recent': 5,
     'maincss':      "/css/main.css",
     'rssfeed':      "feed.xml"
 }

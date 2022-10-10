@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include "includes/head.html" %}
+<body>
+  <div class="container">
+    <header class="site-header">{% include "includes/header.html" %}</header>
+    <article class="content">
+      {% block content %}
+      {{ content }}
+      {% endblock %}
+    </article>
+    <footer class="site-footer">{% include "includes/footer.html" %}</footer>
+  </div>
+</body>
+</html>

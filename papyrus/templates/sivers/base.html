@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include "includes/head.html" %}
-<body>
-  <header>{% include "includes/header.html" %}</header>
+<body id="home">
+  {% include "includes/header.html" %}
+
   {% block content %}
   {{ content }}
   {% endblock %}

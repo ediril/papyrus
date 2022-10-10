@@ -1,0 +1,13 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <link rel="stylesheet" href="{{ site.maincss }}">
+  <link rel="canonical" href="{{ site.absolute_url }}{{ page.url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ site.base_url }}{{ "/feed.xml"  }}" />
+  <meta property="og:title" content="{% if page.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}" />
+  <meta property="og:site_name" content="{{ site.site_name }}">
+  <meta property="og:url" content="{{ site.absolute_url }}{{ page.url }}">
+  <meta name="robots" content="noarchive">
+</head>

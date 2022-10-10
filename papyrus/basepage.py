@@ -51,6 +51,25 @@ class BasePage:
             return True
         return False
 
+    def is_tweet(self):
+        if 'tweet' in self.props:
+            return True
+        return False
+
+    def is_image(self):
+        if 'image' in self.props:
+            return True
+        return False
+
+    def is_link(self):
+        if 'link' in self.props:
+            return True
+        return False
+
+    def is_note(self):
+        return all(p not in self.props for p in ["link", "tweet", "image"])
+
+
     def is_public(self):
         if not self.props:
             return True

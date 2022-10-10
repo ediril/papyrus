@@ -14,8 +14,8 @@ from .pandoc import Pandoc
 class Site():
     def __init__(self, args, conf):
         self.config = conf
-        self.page_files = pathlib.Path(self.config['DIR_PAGES']).glob('*.md')
-        self.post_files = sorted(pathlib.Path('.').glob('*.md'), key=lambda p: str(p.name))
+        self.page_files = self.get_files('DIR_PAGES')
+        self.post_files = self.get_files('DIR_POSTS', sort=True)
         self.posts = []
         self.pages = []
         self.tags = {}
@@ -26,6 +26,26 @@ class Site():
             self.config['SITE']['base_url'] = self.config['SITE']['absolute_url']
         self.pandoc = Pandoc(self.config)
         self.template_path = pathlib.Path(__file__).parent / 'templates' / self.config['SITE']['template']
+
+    def get_files(self, cfg_name, sort=False):
+        dirs = self.config[cfg_name]
+
+        if not isinstance(dirs, list):
+            if isinstance(dirs, str):
+                dirs = [self.config[cfg_name]]
+            else:
+                raise ValueError("Unknown type for: ", cfg_name)
+
+        result = []
+        for dir in dirs:
+            for file in pathlib.Path(dir).glob('**/*.md'):
+                result.append(file)
+
+        if result and sort:
+            result = sorted(result, key=lambda p: str(p.name))
+
+        return result
+
 
     def build(self):
         self.copy_files()
@@ -66,13 +86,14 @@ class Site():
             else:
                 post = Post(post_file)
 
-            if post.is_draft():
-                print("Skipping draft post: ", post)
-                continue
-
+            # We need to build the post first before its props become available
             if not post.is_current():
                 post.build(self.pandoc, self.config)
                 self.post_store[post.input_path.name] = post
+
+            if post.is_draft():
+                print("Skipping draft post: ", post)
+                continue
 
             if post.is_public():
                 self.posts.append(post)
