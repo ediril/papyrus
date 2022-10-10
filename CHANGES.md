@@ -1,6 +1,6 @@
 v0.6
 - Add support for list of folders in DIR_POSTS
-- Add specialty methods to be able to distinguish links, notes, tweets and images
+- Add specialty methods to be able to distinguish links, notes, tweets and photos
 - Rename `default` template to `sivers`
 - Add `stasis` template to templates folder
 - Template changes to `sivers`

@@ -56,8 +56,8 @@ class BasePage:
             return True
         return False
 
-    def is_image(self):
-        if 'image' in self.props:
+    def is_photo(self):
+        if 'photo' in self.props:
             return True
         return False
 
