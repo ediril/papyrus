@@ -8,7 +8,8 @@
     <pubDate>{{ site.timestamp }}</pubDate>
     <lastBuildDate>{{ site.timestamp }}</lastBuildDate>
     <generator>Papyrus</generator>
-    {% for post in site.posts | reverse %}
+    {% for post in site.posts %}
+      {% if post.is_note() %}
       <item>
         <title>{{ post.title | escape }}</title>
         <description>{{ post.excerpt | escape }}</description>
@@ -16,6 +17,7 @@
         <link>{{ site.url }}{{ post.url }}</link>
         <guid isPermaLink="true">{{ site.url }}{{ post.url }}</guid>
       </item>
+      {% endif %}
     {% endfor %}
   </channel>
 </rss>

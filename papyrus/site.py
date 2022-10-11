@@ -56,7 +56,7 @@ class Site():
         self.write_tag_pages()
         self.read_pages()
         self.write_pages()
-        # self.write_rss_feed()
+        self.write_rss_feed()
         self.post_store.close()
 
     def copy_files(self):
@@ -143,8 +143,7 @@ class Site():
     def write_tag_pages(self):
         template = self.jinja_env.get_template("tag.html")
         for tag in self.tags:
-            #print("  {}".format(tag))
-            posts = self.tags[tag]
+            posts = [post for post in self.tags[tag] if post.is_note()]
             posts.reverse()
             page = {
                 'title': tag.title(),
@@ -158,11 +157,11 @@ class Site():
 
 
     def write_rss_feed(self):
-        print("Writing RSS feed...")
         # self.config['SITE']['timestamp'] = utils.format_datetime(datetime.datetime.utcnow())
         self.config['SITE']['timestamp'] = self.posts[len(self.posts)-1].date
         template = self.jinja_env.get_template("feed.xml")
         template_out = template.render(site=self.config['SITE'], page={})
         output_path = self.site_path / self.config['SITE']['rssfeed']
         output_path.write_text(template_out)
+        print("Wrote RSS feed")
 
