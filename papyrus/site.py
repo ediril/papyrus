@@ -53,7 +53,7 @@ class Site():
         self.read_posts()
         self.build_tags()
         self.write_posts()
-        # self.write_tag_pages()
+        self.write_tag_pages()
         self.read_pages()
         self.write_pages()
         # self.write_rss_feed()
@@ -141,20 +141,21 @@ class Site():
             print(f"Wrote {cnt} public page{'s' if cnt != 1 else ''}")
 
     def write_tag_pages(self):
-        print("Writing tag pages...")
         template = self.jinja_env.get_template("tag.html")
         for tag in self.tags:
-            print("  {}".format(tag))
+            #print("  {}".format(tag))
             posts = self.tags[tag]
             posts.reverse()
             page = {
                 'title': tag.title(),
-                'url': f"/tags/{tag}/"
+                'url': f"/tags/{tag}"
             }
             template_out = template.render(tag=tag, posts=posts, site=self.config['SITE'], page=page)
             tag_path = self.site_path / "tags" / tag
             tag_path.parent.mkdir(parents=True, exist_ok=True)
             tag_path.write_text(template_out)
+        print(f"Wrote {len(self.tags)} tag page{'s' if len(self.tags) != 1 else ''}")
+
 
     def write_rss_feed(self):
         print("Writing RSS feed...")
