@@ -3,6 +3,8 @@ import pathlib
 import datetime
 import os
 
+NOT_NOTE = ["link", "tweet", "image", "file"]
+
 class BasePage:
 
     def __init__(self, input_path):
@@ -56,8 +58,8 @@ class BasePage:
             return True
         return False
 
-    def is_photo(self):
-        if 'photo' in self.props:
+    def is_image(self):
+        if 'image' in self.props:
             return True
         return False
 
@@ -66,8 +68,18 @@ class BasePage:
             return True
         return False
 
+    def is_file(self):
+        if 'file' in self.props:
+            return True
+        return False
+
+    def is_x(self, prop):
+        if prop in self.props:
+            return True
+        return False
+
     def is_note(self):
-        return all(p not in self.props for p in ["link", "tweet", "image"])
+        return all(p not in self.props for p in NOT_NOTE)
 
 
     def is_public(self):
