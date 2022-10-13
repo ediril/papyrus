@@ -2,9 +2,9 @@
 
 ### local directory setup
 DIR_PUBLISH   = "_pub"
-DIR_PAGES     = "pages"
+DIR_PAGES     = "pages"     # can be a list of folders
 DIR_POSTS     = "posts"     # can be a list of folders, e.g. ["notes1", "notes2"]
-DIR_FILES     = "files"
+DIR_FILES     = "files"     # can be a list of folders
 POST_STORE    = "post_store.db"
 
 ### public-facing site metadata
