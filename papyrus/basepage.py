@@ -3,7 +3,7 @@ import pathlib
 import datetime
 import os
 
-NOT_NOTE = ["link", "tweet", "image", "file"]
+NOT_NOTE = ["link", "image", "tweet", "music", "pdf"]
 
 class BasePage:
 
@@ -68,11 +68,6 @@ class BasePage:
             return True
         return False
 
-    def is_file(self):
-        if 'file' in self.props:
-            return True
-        return False
-
     def is_x(self, prop):
         if prop in self.props:
             return True
@@ -80,7 +75,6 @@ class BasePage:
 
     def is_note(self):
         return all(p not in self.props for p in NOT_NOTE)
-
 
     def is_public(self):
         if not self.props:
