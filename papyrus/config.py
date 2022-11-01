@@ -1,6 +1,6 @@
 import pathlib
 
-DEFAULT_CONFIG_FILE = "_site_config.py"
+DEFAULT_CONFIG_FILE = "_papyrus_config.py"
 BOOTSTRAP_PATH = "bootstrap"
 
 def read_config():

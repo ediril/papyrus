@@ -5,7 +5,7 @@ DIR_PUBLISH   = "_pub"
 DIR_PAGES     = "pages"     # can be a list of folders
 DIR_POSTS     = "posts"     # can be a list of folders, e.g. ["notes1", "notes2"]
 DIR_FILES     = "files"     # can be a list of folders
-POST_STORE    = "post_store.db"
+POST_STORE    = "papyrus_store.db"
 
 ### public-facing site metadata
 SITE = {
